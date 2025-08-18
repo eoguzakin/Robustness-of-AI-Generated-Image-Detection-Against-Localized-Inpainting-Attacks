@@ -1,0 +1,10 @@
+==============================
+--- PRELIMINARY RESULTS ---
+==============================
+Detector Evaluated: UniversalFakeDetect (CLIP)
+------------------------------
+Total Images Evaluated: 400
+Correct Predictions:    388
+------------------------------
+PRELIMINARY ACCURACY: 97.00%
+==============================
