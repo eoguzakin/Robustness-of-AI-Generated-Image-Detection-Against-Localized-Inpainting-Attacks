@@ -1,0 +1,35 @@
+# configs/paths_aeroblade.yaml
+aeroblade:
+  baseline:
+    reals: /home/oakin/data/datasets/aeroblade/baseline/reals/
+    fakes: /home/oakin/data/datasets/aeroblade/baseline/fakes/
+
+  attacked_fakes:
+    lama:
+      randrect: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_lama/randrect
+      bin1: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_lama/randblob_bins/bin1
+      bin2: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_lama/randblob_bins/bin2
+      bin3: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_lama/randblob_bins/bin3
+      bin4: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_lama/randblob_bins/bin4
+    zits:
+      randrect: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_zits/randrect
+      bin1: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_zits/randblob_bins/bin1
+      bin2: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_zits/randblob_bins/bin2
+      bin3: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_zits/randblob_bins/bin3
+      bin4: /home/oakin/data/datasets/aeroblade/baseline/fakes_inpainted_zits/randblob_bins/bin4
+
+  attacked_reals:
+    lama:
+      randrect: /home/oakin/data/datasets/aeroblade/robustness/inpainted_lama/randrect/
+      bin1_0_3: /home/oakin/data/datasets/aeroblade/robustness/inpainted_lama/randblob_bins/bin1_0-3/
+      bin2_3_10: /home/oakin/data/datasets/aeroblade/robustness/inpainted_lama/randblob_bins/bin2_3-10/
+      bin3_10_25: /home/oakin/data/datasets/aeroblade/robustness/inpainted_lama/randblob_bins/bin3_10-25/
+      bin4_25_40: /home/oakin/data/datasets/aeroblade/robustness/inpainted_lama/randblob_bins/bin4_25-40/
+    zits:
+      randrect: /home/oakin/data/datasets/aeroblade/robustness/inpainted_zits/randrect/
+      bin1_0_3: /home/oakin/data/datasets/aeroblade/robustness/inpainted_zits/randblob_bins/bin1_0-3/
+      bin2_3_10: /home/oakin/data/datasets/aeroblade/robustness/inpainted_zits/randblob_bins/bin2_3-10/
+      bin3_10_25: /home/oakin/data/datasets/aeroblade/robustness/inpainted_zits/randblob_bins/bin3_10-25/
+      bin4_25_40: /home/oakin/data/datasets/aeroblade/robustness/inpainted_zits/randblob_bins/bin4_25-40/
+    semantic:
+      reals_inpainted: /home/oakin/data/datasets/aeroblade/robustness/reals_inpainted/

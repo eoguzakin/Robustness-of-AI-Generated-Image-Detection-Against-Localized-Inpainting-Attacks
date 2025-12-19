@@ -1,0 +1,19 @@
+# configs/paths_stablesig.yaml
+stablesig:
+  baseline:
+    reals: /home/oakin/data/datasets/stablesig/baseline/reals/
+    fakes: /home/oakin/data/datasets/stablesig/watermark/clean/
+
+  attacked_fakes:
+    lama:
+      randrect: /home/oakin/data/datasets/stablesig/watermark/inpainted_lama/randrect
+      bin1_0_3: /home/oakin/data/datasets/stablesig/watermark/inpainted_lama/randblob_bins/bin1_0-3
+      bin2_3_10: /home/oakin/data/datasets/stablesig/watermark/inpainted_lama/randblob_bins/bin2_3-10
+      bin3_10_25: /home/oakin/data/datasets/stablesig/watermark/inpainted_lama/randblob_bins/bin3_10-25
+      bin4_25_40: /home/oakin/data/datasets/stablesig/watermark/inpainted_lama/randblob_bins/bin4_25-40
+    zits:
+      randrect: /home/oakin/data/datasets/stablesig/watermark/inpainted_zits/randrect
+      bin1_0_3: /home/oakin/data/datasets/stablesig/watermark/inpainted_zits/randblob_bins/bin1_0-3
+      bin2_3_10: /home/oakin/data/datasets/stablesig/watermark/inpainted_zits/randblob_bins/bin2_3-10
+      bin3_10_25: /home/oakin/data/datasets/stablesig/watermark/inpainted_zits/randblob_bins/bin3_10-25
+      bin4_25_40: /home/oakin/data/datasets/stablesig/watermark/inpainted_zits/randblob_bins/bin4_25-40
