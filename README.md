@@ -1,193 +1,183 @@
-The README below follows your **old sectioning/format**, but updates the detector list + conclusions to match the **final thesis** (fixed-threshold protocol; ASRReal/ASRFake framing; dichotomy between edited reals vs edited fakes; watermark robustness degrading with larger masks) and reflects the **new scripts layout** (per-detector runnable pipelines / script files instead of zip bundles).[1][2][3][4][5][6]
-
-```markdown
 # Robustness of AI-Generated Image Detection Against Localized Inpainting Attacks
 
-
-This repository contains the **code and experimental pipelines** used in the thesis:
-
+Code and experimental pipelines for the thesis:
 
 > **Robustness of AI-Generated Image Detection Against Localized Inpainting Attacks**  
-> Oğuz Akın, Saarland University / CISPA Helmholtz Center for Information Security (2025)
+> Oğuz Akın — Saarland University / CISPA Helmholtz Center for Information Security (2025)
 
-
-📄 [Thesis PDF](./Thesis.pdf)  
-📊 [Curated Datasets on Hugging Face](https://huggingface.co/datasets/eoguzakin/Robustness-of-AI-Generated-Image-Detection-Against-Localized-Inpainting-Attacks)
-
+- Thesis PDF: [Robustness of AI-Generated Image Detection Against Localized Inpainting Attacks.pdf](./Robustness%20of%20AI-Generated%20Image%20Detection%20Against%20Localized%20Inpainting%20Attacks.pdf)
+- Curated datasets: https://huggingface.co/datasets/eoguzakin/Robustness-of-AI-Generated-Image-Detection-Against-Localized-Inpainting-Attacks
 
 ---
 
+## Overview
 
-## 📌 Overview
+This work evaluates the **robustness of AI-generated image (AIGI) detectors** under **localized inpainting attacks**.
+Unlike global post-processing, localized inpainting overwrites *only selected regions*, creating hybrid images that mix authentic and generated pixels (or watermarked and non-watermarked regions).
 
+### Key findings (high level)
 
-This thesis systematically evaluates the **robustness of AI-generated image (AIGI) detectors** against **localized inpainting attacks**.
+- A consistent dichotomy appears across detector families:
+  - On edited real photos, many detectors still predict **Real** (high **ASRReal** / high “real pass rate”).
+  - On edited fakes, many detectors remain robust: inpainting often does **not** dramatically improve evasion (low **ASRFake** / low “fake evasion rate”).
+- Passive + training-free detectors (e.g., UFD, DIMD, WaRPAD, AEROBLADE) commonly show high pass rates on inpainted reals under a fixed-threshold policy.
+- Watermarking methods (Tree-Ring, Stable Signature) tend to stay robust for small/moderate edits, but degrade more noticeably as inpainted area increases (e.g., 25–40% masks).
+- Baseline AUC is not a reliable predictor of robustness.
 
-Most detectors perform well on clean benchmark datasets, but real-world deployment involves post-processing edits. Localized inpainting is particularly important because it **overwrites only selected regions**, creating *hybrid images* that mix authentic and generated pixels (or watermarked and non-watermarked regions).
-
-
-### Key Findings
-
-
-* **A consistent dichotomy appears across detector families**:
-  * On **edited real photos**, many detectors **fail to flag localized inpainting** and still classify them as Real (high **ASRReal** / high “real pass rate”).
-  * On **edited fakes**, many detectors remain **surprisingly robust**: localized inpainting often does **not** significantly help an attacker evade detection (low **ASRFake** / low “fake evasion rate”).
-* **Passive + training-free detectors** (e.g., UFD, DIMD, WaRPAD, AEROBLADE) commonly show **high pass rates on inpainted reals**, meaning localized edits can go unnoticed under a fixed-threshold policy.
-* **Watermarking methods** (Tree-Ring, Stable Signature) tend to stay **robust for small and moderate edits**, but their failure rates **increase more noticeably** as the inpainted area grows (especially for large masks such as 25–40%).
-* **Baseline AUC is not a reliable predictor of robustness**: strong clean-data separation does not guarantee stability under localized edits.
-
-📢 **Conclusion**: Robustness must be evaluated under a clear threat model and a fixed-threshold protocol; “clean benchmark performance” alone is insufficient for deployment decisions.
-
+**Conclusion:** robustness should be evaluated under a clear threat model and a fixed-threshold protocol; clean benchmark performance alone is insufficient for deployment decisions.
 
 ---
 
-
-## 🗂 Repository Structure
-
+## Repository layout
 
 ```
-├── scripts/                             # Experimental pipelines and evaluation code
-│   ├── ufd-scripts.txt                  # UFD: baseline + robustness scoring + analysis templates
-│   ├── dimd-scripts.txt                 # DIMD: scoring + bin evaluation (AUC/ASR) templates
-│   ├── warpad-scripts.txt               # WaRPAD: scoring + analysis pipeline
-│   ├── aeroblade-scripts.txt            # AEROBLADE (official): run + aggregate + print results
-│   ├── stablesig-scripts.txt            # Stable Signature: decode-score + eval pipeline
-│   └── treering-scripts.txt             # Tree-Ring: key estimation + scoring + eval pipeline
-├── Thesis.pdf                            # Final thesis document
-└── README.md                             # You are here
+.
+├─ configs/
+│  ├─ paths_aeroblade.yaml
+│  ├─ paths_dimd.yaml
+│  ├─ paths_stablesig.yaml
+│  ├─ paths_treering.yaml
+│  ├─ paths_ufd.yaml
+│  └─ paths_warpad.yaml
+├─ scripts/
+│  ├─ config_utils.py
+│  ├─ ufd_score_baseline.py
+│  ├─ ufd_score_robust.py
+│  ├─ ufd_analyze.py
+│  ├─ ufd_common.py
+│  ├─ dimd_score.py
+│  ├─ dimd_score_baseline.py
+│  ├─ dimd_score_robust.py
+│  ├─ dimd_analyze.py
+│  ├─ dimd_common.py
+│  ├─ warpad_score_baseline.py
+│  ├─ warpad_score_robust.py
+│  ├─ warpad_analyze.py
+│  ├─ aeroblade_score_baseline.py
+│  ├─ aeroblade_score_robust.py
+│  ├─ aeroblade_analyze.py
+│  ├─ aeroblade_common.py
+│  ├─ stablesig_score_baseline.py
+│  ├─ stablesig_score_robust.py
+│  ├─ stablesig_analyze.py
+│  ├─ treering_score_baseline.py
+│  ├─ treering_score_robust.py
+│  ├─ treering_analyze.py
+│  └─ make_ufd_jobs.py
+├─ Robustness of AI-Generated Image Detection Against Localized Inpainting Attacks.pdf
+└─ README.md
 ```
-
-
-### Script Bundles (new layout)
-
-
-Instead of large zipped bundles, the repository now ships **detector-specific runnable pipelines / templates** in `scripts/*.txt`:
-
-* **ufd-scripts.txt** – UFD scoring on baseline + robustness splits + fixed-threshold evaluation
-* **dimd-scripts.txt** – DIMD directory scorer + summary evaluator (AUC/ΔAUC/ASR)
-* **warpad-scripts.txt** – WaRPAD scoring + analysis pipeline (fixed-threshold ASR tables)
-* **aeroblade-scripts.txt** – AEROBLADE official pipeline + aggregation + final ASR tables
-* **stablesig-scripts.txt** – Stable Signature decode scoring + robustness evaluator (with LaMa name mapping)
-* **treering-scripts.txt** – Tree-Ring key estimation + scoring + robustness evaluator
-
-Each file contains an end-to-end recipe: environment notes, dataset paths, scoring, and evaluation outputs.
-
 
 ---
 
-
-## 🚀 How to run the experiments
-
+## How to run the experiments
 
 All detectors follow the same high-level workflow:
 
-1. **Baseline scoring** (clean reals vs clean fakes)  
-2. **Threshold calibration** on baseline only (fixed threshold is then locked)  
-3. **Robustness scoring** (inpainted splits)  
+1. **Baseline scoring** (clean reals vs. clean fakes)
+2. **Threshold calibration** on baseline only (fixed threshold is then locked)
+3. **Robustness scoring** (inpainted splits)
 4. **Evaluation** (AUC/ΔAUC + ASRReal/ASRFake under the locked threshold)
+
+### Configuration (paths)
+
+Each detector reads dataset locations from its YAML file in `configs/`.
+For example, UFD defaults to `configs/paths_ufd.yaml` and uses keys like:
+
+- `ufd.baseline.reals`
+- `ufd.baseline.fakes`
+- (robustness keys are detector-specific and referenced by the `*_score_robust.py` scripts)
+
+The YAML loader expands environment variables (e.g., `$DATA_ROOT`) via `scripts/config_utils.py`.
 
 ### Quickstart
 
-Pick a detector and follow its script file:
+Run scripts directly (examples):
 
-- UFD → `scripts/ufd-scripts.txt`
-- DIMD → `scripts/dimd-scripts.txt`
-- WaRPAD → `scripts/warpad-scripts.txt`
-- AEROBLADE → `scripts/aeroblade-scripts.txt`
-- Stable Signature → `scripts/stablesig-scripts.txt`
-- Tree-Ring → `scripts/treering-scripts.txt`
+```bash
+# UFD
+python scripts/ufd_score_baseline.py --paths configs/paths_ufd.yaml
+python scripts/ufd_score_robust.py --paths configs/paths_ufd.yaml
+python scripts/ufd_analyze.py
+
+# WaRPAD
+python scripts/warpad_score_baseline.py --paths configs/paths_warpad.yaml
+python scripts/warpad_score_robust.py --paths configs/paths_warpad.yaml
+python scripts/warpad_analyze.py
+```
+
+For detector-specific options (checkpoints, third-party repos, device, output folders), use:
+
+```bash
+python scripts/ufd_score_baseline.py --help
+```
 
 ### Outputs
 
-All pipelines are designed to produce:
+Pipelines generally produce:
 
-- Raw score CSVs (per condition/split)
-- A summary table with **AUC**, **ΔAUC**, and attack success rates (**ASRReal**, **ASRFake**)
-- (Optional) confidence intervals depending on the evaluator script
+- Raw per-image score CSVs (per split/condition)
+- Summary tables with **AUC**, **ΔAUC**, and attack success rates (**ASRReal**, **ASRFake**)
 
+Default output root is typically `outputs/<detector>/...` (see each script’s `--out_dir`).
 
 ---
 
-
-## 📊 Datasets
-
+## Datasets
 
 All curated datasets are hosted on Hugging Face:
 
-👉 [Robustness of AIGI Detection Against Localized Inpainting Attacks](https://huggingface.co/datasets/eoguzakin/Robustness-of-AI-Generated-Image-Detection-Against-Localized-Inpainting-Attacks)
+https://huggingface.co/datasets/eoguzakin/Robustness-of-AI-Generated-Image-Detection-Against-Localized-Inpainting-Attacks
 
-
-* **Baseline sets**: clean reals vs. clean fakes (used for calibration)
-* **Robustness sets**: attacked (inpainted) variants
-* **Attack splits**:
-  * Semantic masks (from Semi-Truths)
-  * Random blobs (area bins: 0–3%, 3–10%, 10–25%, 25–40%)
-  * Random rectangles
-
+- Baseline sets: clean reals vs. clean fakes (used for calibration)
+- Robustness sets: attacked (inpainted) variants
+- Attack splits include:
+  - Semantic masks (from Semi-Truths)
+  - Random blobs (area bins: 0–3%, 3–10%, 10–25%, 25–40%)
+  - Random rectangles
 
 ---
 
+## Detectors evaluated
 
-## ⚙️ Detectors Evaluated
+Implemented using official codebases and weights (or official verification procedures):
 
-
-The following detectors were implemented using official codebases and weights (or official verification procedures):
-
-* **Passive detectors**:
-  * *UFD* (CLIP-based universal detector)
-  * *DIMD* (artifact-based diffusion detector)
-* **Training-free methods**:
-  * *AEROBLADE* (autoencoder reconstruction-based)
-  * *WaRPAD* (feature-consistency based)
-* **Watermarking approaches**:
-  * *Stable Signature* (latent-space / decoder-based verification)
-  * *Tree-Ring* (frequency-domain / inversion-based verification)
-
-Each detector is evaluated under the same fixed-threshold protocol described below.
-
+- Passive detectors: UFD, DIMD
+- Training-free methods: AEROBLADE, WaRPAD
+- Watermarking approaches: Stable Signature, Tree-Ring
 
 ---
 
+## Metrics
 
-## 📈 Metrics
+- **AUC**: separability of real vs. fake.
+- **ΔAUC**: degradation from baseline to robustness condition.
+- **ASR (Attack Success Rate)**:
+  - **ASRFake** (fake evasion rate): % of inpainted fakes misclassified as Real.
+  - **ASRReal** (real pass rate): % of inpainted reals still classified as Real.
 
-
-* **AUC** – separability of real vs. fake.
-* **ΔAUC** – degradation from baseline to robustness condition.
-* **ASR (Attack Success Rate)**:
-  * **ASRFake (Fake evasion rate)**: % of **inpainted fakes** misclassified as Real (attacker successfully evades).
-  * **ASRReal (Real pass rate)**: % of **inpainted reals** still classified as Real (detector fails to flag localized edits).
-
-**Important:** ASR metrics are computed on the *baseline-correct subset* (only images correctly classified on clean baseline are counted in ASR evaluation), using the threshold fixed during calibration.
-
+ASR is computed on the baseline-correct subset (only images correctly classified on clean baseline are counted), using the threshold fixed during calibration.
 
 ---
 
+## Reproducibility
 
-## 🔬 Reproducibility
+- Datasets: Hugging Face link above
+- Code: `scripts/`
+- Paths/config: `configs/`
+- Thesis PDF: linked at the top
 
-
-* Datasets: [Hugging Face](https://huggingface.co/datasets/eoguzakin/Robustness-of-AI-Generated-Image-Detection-Against-Localized-Inpainting-Attacks)
-* Scripts: in this repository (`scripts/*.txt`)
-* Thesis: included as [Thesis.pdf](./Thesis.pdf)
-
-All robustness results are produced with a **fixed threshold chosen on clean baseline data** (no re-tuning on attacked images).
-
+All robustness results use a fixed threshold chosen on clean baseline data (no re-tuning on attacked images).
 
 ---
 
+## Citation
 
-## 📜 Citation
-
-
-If you use this work, please cite:
-
-
-```
+```bibtex
 @thesis{akin2025robustness,
-  title={Robustness of AI-Generated Image Detection Against Localized Inpainting Attacks},
-  author={Ak{\i}n, O\u{g}uz},
-  year={2025},
-  school={Saarland University, CISPA Helmholtz Center for Information Security}
+  title  = {Robustness of AI-Generated Image Detection Against Localized Inpainting Attacks},
+  author = {Ak{\i}n, O{\u{g}}uz},
+  year   = {2025},
+  school = {Saarland University, CISPA Helmholtz Center for Information Security}
 }
 ```
